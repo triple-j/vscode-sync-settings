@@ -9,6 +9,8 @@ repository:
   # repository's type, required (dummy: no sync)
   type: dummy
 
+# (auto, ui, workspace)
+extensionKind: auto
 
 # # how to run commands before and after events at https://github.com/zokugun/vscode-sync-settings/blob/master/docs/hooks.md
 # hooks:

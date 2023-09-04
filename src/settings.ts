@@ -40,6 +40,7 @@ export interface RepositorySettings {
 }
 
 interface SettingsData {
+	extensionKind?: 'auto' | 'ui' | 'workspace';
 	hooks?: Hooks;
 	hostname?: string;
 	profile?: string;
@@ -49,13 +50,13 @@ interface SettingsData {
 export class Settings {
 	public readonly extensionId: string;
 	public readonly globalStorageUri: Uri;
-	public readonly remote: boolean;
 	public readonly settingsUri: Uri;
 
 	private _hash = '';
 	private _hooks: Hooks = {};
 	private _hostname?: string;
 	private _profile: string = '';
+	private _remote: boolean = false;
 	private _repository: RepositorySettings = {
 		type: RepositoryType.DUMMY,
 	};
@@ -64,7 +65,7 @@ export class Settings {
 		this.extensionId = id;
 		this.globalStorageUri = globalStorageUri;
 		this.settingsUri = settingsUri;
-		this.remote = remote;
+		this._remote = remote;
 	} // }}}
 
 	public get hooks() { // {{{
@@ -77,6 +78,10 @@ export class Settings {
 
 	public get profile() { // {{{
 		return this._profile;
+	} // }}}
+
+	public get remote() { // {{{
+		return this._remote;
 	} // }}}
 
 	public get repository() { // {{{
@@ -233,6 +238,10 @@ export class Settings {
 
 		if(data.hostname) {
 			Logger.info('hostname:', data.hostname);
+		}
+
+		if(data.extensionKind && data.extensionKind !== 'auto') {
+			this._remote = data.extensionKind === 'workspace';
 		}
 
 		if(data.repository) {
